@@ -16,6 +16,7 @@ async function init() {
   renderWorks();
   renderLinks();
   initScrollReveal();
+  renderSkills();
 }
 
 // ── プロフィールをHeroに反映 ──
@@ -138,6 +139,28 @@ async function handleSubmit(e) {
   }, 3000);
 }
 
+async function renderSkills() {
+  const grid = document.getElementById('skillsGrid');
+  if (!grid) return;
+
+  const skills = await loadData('skills') ?? DEFAULTS_SKILLS;
+
+  if (!skills.length) {
+    grid.innerHTML = '<div class="loading-msg">スキルはまだありません</div>';
+    return;
+  }
+
+  grid.innerHTML = skills.map(s => `
+    <div class="skill-card">
+      <div class="skill-icon">[ ${esc(s.icon)} ]</div>
+      <div class="skill-name">${esc(s.name)}</div>
+      <p class="skill-desc">${esc(s.desc)}</p>
+      <div class="skill-tags">
+        ${(s.tags||[]).map(t => `<span class="tag">${esc(t)}</span>`).join('')}
+      </div>
+    </div>
+  `).join('');
+}
 
 // ── 起動 ──
 document.addEventListener('DOMContentLoaded', init);

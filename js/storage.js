@@ -112,3 +112,11 @@ function toast(msg, isError = false) {
   el.classList.add('show');
   setTimeout(() => el.classList.remove('show'), 2500);
 }
+
+// storage.jsのDEFAULTSに追加
+const DEFAULTS_SKILLS = [
+  { id: 1, icon: 'AI / LLM', name: 'OpenAI API 連携', desc: 'GPT-4oを使ったテキスト生成・分類・要約アプリを構築。プロンプト設計からAPI実装まで対応。', tags: ['GPT-4o', 'Prompt Engineering', 'Python'] },
+  { id: 2, icon: 'Automation', name: 'n8n ワークフロー自動化', desc: 'ノーコードツールn8nでメール・Slack・スプレッドシートなどの業務フローを自動化。', tags: ['n8n', 'Webhook', 'API連携'] },
+  { id: 3, icon: 'Web App', name: 'Streamlit アプリ開発', desc: 'PythonだけでAIチャットボットやデータ分析ツールを開発・デプロイ。Streamlit Cloudで即公開。', tags: ['Streamlit', 'Python', 'Deploy'] },
+  { id: 4, icon: 'Content', name: '技術記事・ドキュメント作成', desc: 'Zennへの技術記事執筆実績あり。AIツールの使い方・自動化事例をわかりやすく解説。', tags: ['Zenn', '技術記事', 'マニュアル'] },
+];

@@ -188,6 +188,56 @@
       </div>
     </div>
 
+    <!-- SKILLS -->
+    <div class="panel" id="panel-skills">
+      <div class="mp-header">
+        <div>
+          <div class="mp-title">スキル管理</div>
+          <div class="mp-subtitle">index.html のSkills欄に反映されます</div>
+        </div>
+      </div>
+      <div class="mp-block">
+        <div class="mp-block-header"><div class="mp-block-title">新規追加</div></div>
+        <div class="mp-block-body">
+          <div class="mp-form">
+            <div class="add-grid">
+              <div class="mp-field">
+                <label class="mp-label">カテゴリ（アイコン表示）</label>
+                <input class="mp-input" type="text" id="sk-icon" placeholder="例：AI / LLM" style="max-width:100%;">
+              </div>
+              <div class="mp-field">
+                <label class="mp-label">スキル名</label>
+                <input class="mp-input" type="text" id="sk-name" placeholder="例：OpenAI API 連携" style="max-width:100%;">
+              </div>
+              <div class="mp-field full">
+                <label class="mp-label">説明文</label>
+                <textarea class="mp-input" id="sk-desc" rows="3"
+                  placeholder="例：GPT-4oを使ったテキスト生成・分類・要約アプリを構築。"
+                  style="max-width:100%;"></textarea>
+              </div>
+              <div class="mp-field full">
+                <label class="mp-label">タグ（カンマ区切り）</label>
+                <input class="mp-input" type="text" id="sk-tags"
+                  placeholder="GPT-4o, Prompt Engineering, Python" style="max-width:100%;">
+              </div>
+            </div>
+            <div class="mp-btn-row" style="margin-top:1rem;">
+              <button class="mp-btn mp-btn-primary" onclick="addSkill()">追加する →</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="mp-block">
+        <div class="mp-block-header">
+          <div class="mp-block-title">登録済み一覧</div>
+          <div style="font-family:var(--mono);font-size:.65rem;color:var(--muted);" id="skillsCount">0件</div>
+        </div>
+        <div class="mp-block-body" id="skillsList">
+          <div style="font-family:var(--mono);font-size:.75rem;color:var(--muted);">スキルなし</div>
+        </div>
+      </div>
+    </div>
+
     <!-- PROFILE -->
     <div class="panel" id="panel-profile">
       <div class="mp-header">

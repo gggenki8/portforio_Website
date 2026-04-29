@@ -6,6 +6,7 @@ let state = {
   links:    [],
   activity: [],
   inquiries: [],
+  skills: [],
 };
 
 // ── 初期化 ──
@@ -63,6 +64,9 @@ function switchPanel(id, el) {
   }
   if (id === 'inquiries') {
     loadInquiries();
+  }
+  if (id === 'skills') {
+    loadSkills();
   }
 }
 
@@ -359,6 +363,76 @@ async function deleteInquiry(id) {
   state.inquiries = state.inquiries.filter(q => q.id !== id);
   await saveData('inquiries', state.inquiries, true);
   renderInquiries();
+  toast('削除しました');
+}
+
+// ── スキル ──
+async function loadSkills() {
+  const data = await loadData('skills') ?? null;
+  state.skills = data ?? DEFAULTS_SKILLS;
+  renderSkillsList();
+}
+
+function renderSkillsList() {
+  const el = document.getElementById('skillsList');
+  const count = document.getElementById('skillsCount');
+  if (!el) return;
+
+  const data = state.skills ?? [];
+  if (count) count.textContent = data.length + '件';
+
+  if (!data.length) {
+    el.innerHTML = '<div style="font-family:var(--mono);font-size:.75rem;color:var(--muted);">スキルなし</div>';
+    return;
+  }
+
+  el.innerHTML = data.map(s => `
+    <div style="padding:1.2rem 0;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;">
+      <div style="min-width:0;">
+        <div style="font-family:var(--mono);font-size:.68rem;color:var(--accent);margin-bottom:.3rem;">[ ${esc(s.icon)} ]</div>
+        <div style="font-family:var(--mono);font-size:.78rem;color:var(--text);margin-bottom:.3rem;">${esc(s.name)}</div>
+        <div style="font-size:.76rem;color:var(--muted);line-height:1.6;margin-bottom:.4rem;">${esc(s.desc)}</div>
+        <div style="display:flex;gap:.3rem;flex-wrap:wrap;">
+          ${(s.tags||[]).map(t => `<span class="tag-sm">${esc(t)}</span>`).join('')}
+        </div>
+      </div>
+      <button class="mp-btn mp-btn-danger" style="padding:.3rem .7rem;font-size:.62rem;flex-shrink:0;"
+        onclick="deleteSkill(${s.id})">削除</button>
+    </div>
+  `).join('');
+}
+
+async function addSkill() {
+  const icon = document.getElementById('sk-icon').value.trim();
+  const name = document.getElementById('sk-name').value.trim();
+  const desc = document.getElementById('sk-desc').value.trim();
+  const tags = document.getElementById('sk-tags').value
+                 .split(',').map(t => t.trim()).filter(Boolean);
+
+  if (!icon || !name || !desc) {
+    toast('カテゴリ・スキル名・説明文を入力してください', true);
+    return;
+  }
+
+  state.skills.push({ id: Date.now(), icon, name, desc, tags });
+  await saveData('skills', state.skills);
+
+  renderSkillsList();
+  addActivity(`スキル追加：${name}`);
+  ['sk-icon', 'sk-name', 'sk-desc', 'sk-tags'].forEach(id => {
+    document.getElementById(id).value = '';
+  });
+  toast('スキルを追加しました');
+}
+
+async function deleteSkill(id) {
+  if (!confirm('このスキルを削除しますか？')) return;
+  const s = state.skills.find(x => x.id === id);
+  state.skills = state.skills.filter(x => x.id !== id);
+  await saveData('skills', state.skills);
+
+  renderSkillsList();
+  if (s) addActivity(`スキル削除：${s.name}`);
   toast('削除しました');
 }
 // ── 起動 ──
