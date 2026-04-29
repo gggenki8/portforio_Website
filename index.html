@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>gen888 | AI自動化エンジニア</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Noto+Sans+JP:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/common.css">
+<link rel="stylesheet" href="css/index.css">
+</head>
+<body>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">gen888<span>.dev</span></div>
+  <ul>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#works">Works</a></li>
+    <li><a href="#flow">Flow</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div>
+    <div class="hero-tag fade-up">AI Automation Engineer</div>
+    <h1 class="fade-up">
+      <span class="name" id="heroName">gen888</span><br>
+      <span class="dim">///</span> <span id="heroCatch">AIで業務を変える</span><span class="cursor"></span>
+    </h1>
+    <p class="hero-desc fade-up" id="heroBio">
+      Python・OpenAI API・n8nを使ったAI自動化ツールの開発が得意です。
+      「作業に時間がかかっている」「同じ作業を繰り返している」
+      そんな課題をAIの力で解決します。
+    </p>
+    <div class="btn-group fade-up">
+      <a href="#works" class="btn btn-primary">制作実績を見る</a>
+      <a href="#contact" class="btn btn-outline">依頼・相談する</a>
+    </div>
+    <div class="hero-stats fade-up">
+      <div>
+        <div class="stat-num" id="statWorks">-</div>
+        <div class="stat-label">制作アプリ数</div>
+      </div>
+      <div>
+        <div class="stat-num">2+</div>
+        <div class="stat-label">自動化フロー数</div>
+      </div>
+      <div>
+        <div class="stat-num">1</div>
+        <div class="stat-label">Zenn記事公開</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section id="skills">
+  <div class="section reveal">
+    <div class="section-header">
+      <span class="section-num">01 —</span>
+      <h2>Skills</h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="skills-grid">
+      <div class="skill-card">
+        <div class="skill-icon">[ AI / LLM ]</div>
+        <div class="skill-name">OpenAI API 連携</div>
+        <p class="skill-desc">GPT-4oを使ったテキスト生成・分類・要約アプリを構築。プロンプト設計からAPI実装まで対応。</p>
+        <div class="skill-tags">
+          <span class="tag">GPT-4o</span>
+          <span class="tag">Prompt Engineering</span>
+          <span class="tag">Python</span>
+        </div>
+      </div>
+      <div class="skill-card">
+        <div class="skill-icon">[ Automation ]</div>
+        <div class="skill-name">n8n ワークフロー自動化</div>
+        <p class="skill-desc">ノーコードツールn8nでメール・Slack・スプレッドシートなどの業務フローを自動化。</p>
+        <div class="skill-tags">
+          <span class="tag">n8n</span>
+          <span class="tag">Webhook</span>
+          <span class="tag">API連携</span>
+        </div>
+      </div>
+      <div class="skill-card">
+        <div class="skill-icon">[ Web App ]</div>
+        <div class="skill-name">Streamlit アプリ開発</div>
+        <p class="skill-desc">PythonだけでAIチャットボットやデータ分析ツールを開発・デプロイ。Streamlit Cloudで即公開。</p>
+        <div class="skill-tags">
+          <span class="tag">Streamlit</span>
+          <span class="tag">Python</span>
+          <span class="tag">Deploy</span>
+        </div>
+      </div>
+      <div class="skill-card">
+        <div class="skill-icon">[ Content ]</div>
+        <div class="skill-name">技術記事・ドキュメント作成</div>
+        <p class="skill-desc">Zennへの技術記事執筆実績あり。AIツールの使い方・自動化事例をわかりやすく解説。</p>
+        <div class="skill-tags">
+          <span class="tag">Zenn</span>
+          <span class="tag">技術記事</span>
+          <span class="tag">マニュアル</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WORKS -->
+<section id="works">
+  <div class="section reveal">
+    <div class="section-header">
+      <span class="section-num">02 —</span>
+      <h2>Works</h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="works-list" id="worksList">
+      <div class="loading-msg">読み込み中...</div>
+    </div>
+  </div>
+</section>
+
+<!-- FLOW -->
+<section id="flow">
+  <div class="section reveal">
+    <div class="section-header">
+      <span class="section-num">03 —</span>
+      <h2>How I work</h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="flow-steps">
+      <div class="flow-step">
+        <div class="flow-step-num">01</div>
+        <div class="flow-step-title">ヒアリング</div>
+        <p class="flow-step-desc">課題・要件・納期を丁寧にヒアリング。不明点はその場で確認します。</p>
+      </div>
+      <div class="flow-step">
+        <div class="flow-step-num">02</div>
+        <div class="flow-step-title">設計・提案</div>
+        <p class="flow-step-desc">最適な技術スタックと実装方針を提案。見積もりも明確に提示。</p>
+      </div>
+      <div class="flow-step">
+        <div class="flow-step-num">03</div>
+        <div class="flow-step-title">開発・報告</div>
+        <p class="flow-step-desc">進捗を定期報告しながら開発。中間確認で認識のズレを防ぎます。</p>
+      </div>
+      <div class="flow-step">
+        <div class="flow-step-num">04</div>
+        <div class="flow-step-title">納品・サポート</div>
+        <p class="flow-step-desc">動作確認後に納品。納品後の修正・質問にも迅速に対応します。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="contact-inner reveal">
+    <div>
+      <div class="contact-lead">
+        お仕事の<br>
+        ご依頼・<br>
+        <span class="accent">ご相談</span>
+      </div>
+      <p class="contact-sub">
+        AI自動化・業務効率化ツールの開発、<br>
+        n8nワークフロー構築など、<br>
+        お気軽にご相談ください。
+      </p>
+      <a class="contact-email" id="contactEmail" href="#" style="display:none;"></a>
+      <div class="contact-links" id="contactLinks">
+        <!-- js/index.js が storage から動的に描画 -->
+      </div>
+    </div>
+    <form onsubmit="handleSubmit(event)">
+      <div>
+        <label>お名前</label>
+        <input type="text" placeholder="山田 太郎" required>
+      </div>
+      <div>
+        <label>メールアドレス</label>
+        <input type="email" placeholder="taro@example.com" required>
+      </div>
+      <div>
+        <label>ご依頼内容</label>
+        <textarea placeholder="例：n8nを使った業務自動化を依頼したいです。" required></textarea>
+      </div>
+      <button type="submit" class="form-submit">送信する →</button>
+    </form>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">gen888.dev</div>
+  <div class="footer-copy">© 2025 gen888. All rights reserved.</div>
+  <a href="mypage.html" class="footer-admin">⚙</a>
+</footer>
+
+<script src="js/storage.js"></script>
+<script src="js/index.js"></script>
+</body>
+</html>

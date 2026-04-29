@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>gen888 | MyPage</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Noto+Sans+JP:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/common.css">
+<link rel="stylesheet" href="css/mypage.css">
+</head>
+<body>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- LOGIN -->
+<div id="loginScreen">
+  <div class="login-box">
+    <div class="login-eyebrow">[ gen888.dev / mypage ]</div>
+    <div class="login-heading">Sign in</div>
+    <div class="login-sub">管理者アカウントでログインしてください</div>
+    <div class="login-form">
+      <div class="mp-field">
+        <label class="mp-label">Username</label>
+        <input class="mp-input" type="text" id="loginUser" placeholder="user" style="max-width:100%;">
+      </div>
+      <div class="mp-field">
+        <label class="mp-label">Password</label>
+        <input class="mp-input" type="password" id="loginPass" placeholder="••••" style="max-width:100%;">
+        <div class="login-error" id="loginErr"></div>
+      </div>
+      <button class="mp-btn mp-btn-primary" onclick="doLogin()" style="width:100%;text-align:center;">
+        ログイン →
+      </button>
+    </div>
+    <a href="index.html" class="back-link">← サイトに戻る</a>
+  </div>
+</div>
+
+<!-- APP -->
+<div class="mp-wrap" id="mpWrap" style="display:none;">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">gen888<span>.dev / mypage</span></div>
+    <div class="sidebar-user">
+      <div class="sidebar-avatar" id="sidebarAvatar">G</div>
+      <div class="sidebar-name" id="sidebarName">gen888</div>
+      <div class="sidebar-role">Administrator</div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-item active" onclick="switchPanel('dashboard', this)">
+        <span class="nav-icon">#</span>Dashboard
+      </div>
+      <div class="nav-item" onclick="switchPanel('works', this)">
+        <span class="nav-icon">▦</span>Works管理
+      </div>
+      <div class="nav-item" onclick="switchPanel('profile', this)">
+        <span class="nav-icon">◎</span>プロフィール
+      </div>
+      <div class="nav-item" onclick="switchPanel('security', this)">
+        <span class="nav-icon">◈</span>セキュリティ
+      </div>
+      <div class="nav-item" onclick="switchPanel('links', this)">
+        <span class="nav-icon">⇗</span>外部リンク
+      </div>
+      <div class="nav-item" onclick="switchPanel('inquiries', this)" id="navInquiries">
+        <span class="nav-icon">✉</span>お問い合わせ
+      </div>
+      
+    </nav>
+    <div class="sidebar-bottom">
+      <a href="index.html" class="sidebar-link-btn">← サイトを見る</a>
+      <button class="sidebar-link-btn logout-btn" onclick="doLogout()">ログアウト</button>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="mp-main">
+
+    <!-- DASHBOARD -->
+    <div class="panel active" id="panel-dashboard">
+      <div class="mp-header">
+        <div>
+          <div class="mp-title">Dashboard</div>
+          <div class="mp-subtitle" id="dashGreeting">WELCOME BACK</div>
+        </div>
+        <div style="font-family:var(--mono);font-size:.68rem;color:var(--muted);" id="dashDate"></div>
+      </div>
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-card-label">Works</div>
+          <div class="stat-card-num" id="dashWorks">0</div>
+          <div class="stat-card-sub">登録済み実績</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-label">公開中</div>
+          <div class="stat-card-num" id="dashPublic">0</div>
+          <div class="stat-card-sub">公開ステータス</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-label">Links</div>
+          <div class="stat-card-num" id="dashLinks">0</div>
+          <div class="stat-card-sub">外部リンク数</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-label">Last Update</div>
+          <div class="stat-card-num" style="font-size:1rem;line-height:2;" id="dashUpdated">—</div>
+          <div class="stat-card-sub">最終更新</div>
+        </div>
+      </div>
+      <div class="mp-block">
+        <div class="mp-block-header">
+          <div class="mp-block-title"><span class="status-dot"></span>Activity Log</div>
+        </div>
+        <div class="mp-block-body" id="activityLog">
+          <div style="font-family:var(--mono);font-size:.75rem;color:var(--muted);">ログなし</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- WORKS -->
+    <div class="panel" id="panel-works">
+      <div class="mp-header">
+        <div>
+          <div class="mp-title">Works 管理</div>
+          <div class="mp-subtitle">ポートフォリオの実績を追加・削除</div>
+        </div>
+      </div>
+      <div class="mp-block">
+        <div class="mp-block-header">
+          <div class="mp-block-title">新規追加</div>
+        </div>
+        <div class="mp-block-body">
+          <div class="add-grid">
+            <div class="mp-field">
+              <label class="mp-label">タイトル *</label>
+              <input class="mp-input" type="text" id="w-title" placeholder="例：LP制作自動化ツール" style="max-width:100%;">
+            </div>
+            <div class="mp-field">
+              <label class="mp-label">ステータス</label>
+              <select class="mp-input" id="w-status" style="max-width:100%;">
+                <option value="公開中">公開中</option>
+                <option value="完成">完成</option>
+                <option value="進行中">進行中</option>
+              </select>
+            </div>
+            <div class="mp-field full">
+              <label class="mp-label">説明文 *</label>
+              <textarea class="mp-input" id="w-desc" rows="3"
+                placeholder="例：OpenAI APIを使ってLP文章を自動生成するStreamlitアプリ。"
+                style="max-width:100%;"></textarea>
+            </div>
+            <div class="mp-field">
+              <label class="mp-label">技術タグ（カンマ区切り）</label>
+              <input class="mp-input" type="text" id="w-tags"
+                placeholder="Python, OpenAI, Streamlit" style="max-width:100%;">
+            </div>
+            <div class="mp-field">
+              <label class="mp-label">URL（任意）</label>
+              <input class="mp-input" type="url" id="w-url"
+                placeholder="https://your-app.streamlit.app" style="max-width:100%;">
+            </div>
+          </div>
+          <div class="mp-btn-row" style="margin-top:1rem;">
+            <button class="mp-btn mp-btn-primary" onclick="addWork()">追加する →</button>
+          </div>
+        </div>
+      </div>
+      <div class="mp-block">
+        <div class="mp-block-header">
+          <div class="mp-block-title">登録済み一覧</div>
+          <div style="font-family:var(--mono);font-size:.65rem;color:var(--muted);" id="worksCount">0件</div>
+        </div>
+        <div class="mp-block-body" style="padding:0;overflow-x:auto;">
+          <table class="works-table">
+            <thead>
+              <tr>
+                <th>タイトル / 説明</th>
+                <th>URL</th>
+                <th>ステータス</th>
+                <th>操作</th>
+              </tr>
+            </thead>
+            <tbody id="worksTbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- PROFILE -->
+    <div class="panel" id="panel-profile">
+      <div class="mp-header">
+        <div>
+          <div class="mp-title">プロフィール</div>
+          <div class="mp-subtitle">index.html のHero・Contact欄に反映されます</div>
+        </div>
+      </div>
+      <div class="mp-block">
+        <div class="mp-block-header"><div class="mp-block-title">基本情報</div></div>
+        <div class="mp-block-body">
+          <div class="mp-form">
+            <div class="mp-field">
+              <label class="mp-label">表示名</label>
+              <input class="mp-input" type="text" id="prof-name" placeholder="gen888">
+            </div>
+            <div class="mp-field">
+              <label class="mp-label">キャッチコピー</label>
+              <input class="mp-input" type="text" id="prof-catch" placeholder="AIで業務を変える">
+            </div>
+            <div class="mp-field">
+              <label class="mp-label">自己紹介文</label>
+              <textarea class="mp-input" id="prof-bio" rows="4"
+                placeholder="Python・OpenAI API・n8nを使ったAI自動化ツールの開発が得意です。"
+                style="max-width:460px;"></textarea>
+            </div>
+            <div class="mp-field">
+              <label class="mp-label">メールアドレス（Contact欄に表示）</label>
+              <input class="mp-input" type="email" id="prof-email" placeholder="your@email.com">
+            </div>
+            <button class="mp-btn mp-btn-primary" onclick="saveProfile()">保存する →</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECURITY -->
+    <div class="panel" id="panel-security">
+      <div class="mp-header">
+        <div>
+          <div class="mp-title">セキュリティ</div>
+          <div class="mp-subtitle">ログイン情報の変更</div>
+        </div>
+      </div>
+      <div class="mp-block">
+        <div class="mp-block-header"><div class="mp-block-title">ユーザー名の変更</div></div>
+        <div class="mp-block-body">
+          <div class="mp-form">
+            <div class="mp-field">
+              <label class="mp-label">現在のユーザー名</label>
+              <input class="mp-input" type="text" id="cur-username" readonly>
+            </div>
+            <div class="mp-field">
+              <label class="mp-label">新しいユーザー名</label>
+              <input class="mp-input" type="text" id="new-username" placeholder="新しいユーザー名">
+            </div>
+            <button class="mp-btn mp-btn-primary" onclick="changeUsername()">変更する →</button>
+          </div>
+        </div>
+      </div>
+      <div class="mp-block">
+        <div class="mp-block-header"><div class="mp-block-title">パスワードの変更</div></div>
+        <div class="mp-block-body">
+          <div class="mp-form">
+            <div class="mp-field">
+              <label class="mp-label">現在のパスワード</label>
+              <input class="mp-input" type="password" id="cur-pass" placeholder="現在のパスワード">
+            </div>
+            <div class="mp-field">
+              <label class="mp-label">新しいパスワード（4文字以上）</label>
+              <input class="mp-input" type="password" id="new-pass" placeholder="新しいパスワード">
+            </div>
+            <div class="mp-field">
+              <label class="mp-label">新しいパスワード（確認）</label>
+              <input class="mp-input" type="password" id="new-pass2" placeholder="もう一度入力">
+            </div>
+            <button class="mp-btn mp-btn-primary" onclick="changePassword()">変更する →</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- LINKS -->
+    <div class="panel" id="panel-links">
+      <div class="mp-header">
+        <div>
+          <div class="mp-title">外部リンク</div>
+          <div class="mp-subtitle">index.html のContact欄に反映されます</div>
+        </div>
+      </div>
+      <div class="mp-block">
+        <div class="mp-block-header"><div class="mp-block-title">リンクを追加</div></div>
+        <div class="mp-block-body">
+          <div class="mp-form">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+              <div class="mp-field">
+                <label class="mp-label">ラベル</label>
+                <input class="mp-input" type="text" id="link-label"
+                  placeholder="例：クラウドワークス" style="max-width:100%;">
+              </div>
+              <div class="mp-field">
+                <label class="mp-label">URL</label>
+                <input class="mp-input" type="url" id="link-url"
+                  placeholder="https://crowdworks.jp/..." style="max-width:100%;">
+              </div>
+            </div>
+            <button class="mp-btn mp-btn-primary" onclick="addLink()">追加する →</button>
+          </div>
+        </div>
+      </div>
+      <div class="mp-block">
+        <div class="mp-block-header"><div class="mp-block-title">登録済みリンク</div></div>
+        <div class="mp-block-body" id="linksList">
+          <div style="font-family:var(--mono);font-size:.75rem;color:var(--muted);">リンクなし</div>
+        </div>
+      </div>
+    </div>
+    <div class="panel" id="panel-inquiries">
+      <div class="mp-header">
+        <div>
+          <div class="mp-title">お問い合わせ</div>
+          <div class="mp-subtitle">index.html から送信された問い合わせ一覧</div>
+        </div>
+      </div>
+      <div class="mp-block">
+        <div class="mp-block-header">
+          <div class="mp-block-title"><span class="status-dot"></span>受信一覧</div>
+          <div style="font-family:var(--mono);font-size:.65rem;color:var(--muted);" id="inquiriesCount">0件</div>
+        </div>
+        <div class="mp-block-body" id="inquiriesList">
+          <div style="font-family:var(--mono);font-size:.75rem;color:var(--muted);">問い合わせなし</div>
+        </div>
+      </div>
+    </div>    
+  </main>
+</div>
+
+<script src="js/storage.js"></script>
+<script src="js/mypage.js"></script>
+</body>
+</html>
