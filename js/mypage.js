@@ -295,14 +295,17 @@ async function deleteLink(id) {
 
 // ── アクティビティログ ──
 async function addActivity(text) {
-  const time = new Date().toLocaleString('ja-JP', {
+  const now = new Date();
+  const time = new Intl.DateTimeFormat('ja-JP', {
     timeZone: 'Asia/Tokyo',
     year: 'numeric',
     month: '2-digit',
     day: '2-digit',
     hour: '2-digit',
     minute: '2-digit',
-  }).replace(/\//g, '-');
+    hour12: false,
+  }).format(now).replace(/\//g, '-');
+
   state.activity.unshift({ text, time });
   if (state.activity.length > 20) state.activity = state.activity.slice(0, 20);
   await saveData('activity', state.activity, false);
