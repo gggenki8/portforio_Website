@@ -59,8 +59,8 @@ const DEFAULTS = {
 // ── 読み込み ──
 async function loadData(key, shared = false) {
   try {
-    const res = await window.storage.get(KEYS[key], shared);
-    return res ? JSON.parse(res.value) : null;
+    const val = localStorage.getItem(KEYS[key]);
+    return val ? JSON.parse(val) : null;
   } catch (e) {
     return null;
   }
@@ -69,9 +69,9 @@ async function loadData(key, shared = false) {
 // ── 書き込み ──
 async function saveData(key, value, shared = false) {
   try {
-    await window.storage.set(KEYS[key], JSON.stringify(value), shared);
+    localStorage.setItem(KEYS[key], JSON.stringify(value));
   } catch (e) {
-    console.error(`storage.set failed [${key}]:`, e);
+    console.error(`localStorage.set failed [${key}]:`, e);
   }
 }
 
