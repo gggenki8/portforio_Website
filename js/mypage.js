@@ -103,6 +103,12 @@ function updateDashStats() {
   document.getElementById('dashLinks').textContent  = state.links.length;
   document.getElementById('dashUpdated').textContent =
     state.activity.length ? state.activity[0].time.slice(5, 10) : '—';
+    const unread = state.inquiries.filter(q => !q.read).length;
+    const unreadEl = document.getElementById('dashUnread');
+    if (unreadEl) {
+      unreadEl.textContent = unread;
+      unreadEl.style.color = unread > 0 ? '#ffaa00' : 'var(--accent)';
+    }
 }
 
 // ── Works ──
@@ -390,6 +396,7 @@ async function loadInquiries() {
   const data = await loadData('inquiries', true) ?? [];
   state.inquiries = data;
   renderInquiries();
+  updateDashStats(); 
 }
 
 function renderInquiries() {
@@ -408,13 +415,25 @@ function renderInquiries() {
   list.innerHTML = data.map(q => `
     <div style="padding:1.2rem 0;border-bottom:1px solid var(--border);">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.5rem;">
-        <div style="font-family:var(--mono);font-size:.78rem;color:var(--text);">${esc(q.name)}
-          <span style="color:var(--muted);font-size:.65rem;margin-left:.5rem;">&lt;${esc(q.email)}&gt;</span>
+        <div style="display:flex;align-items:center;gap:.5rem;">
+          ${!q.read ? '<span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#ffaa00;flex-shrink:0;"></span>' : ''}
+          <div style="font-family:var(--mono);font-size:.78rem;color:var(--text);">${esc(q.name)}
+            <span style="color:var(--muted);font-size:.65rem;margin-left:.5rem;">&lt;${esc(q.email)}&gt;</span>
+          </div>
         </div>
-        <div style="font-family:var(--mono);font-size:.63rem;color:var(--muted);flex-shrink:0;">${q.time}</div>
+        <div style="display:flex;align-items:center;gap:.5rem;flex-shrink:0;">
+          <div style="font-family:var(--mono);font-size:.63rem;color:var(--muted);">${q.time}</div>
+          ${!q.read ? `<button class="mp-btn mp-btn-primary" style="padding:.2rem .6rem;font-size:.6rem;" onclick="markRead(${q.id})">既読</button>` : '<span style="font-family:var(--mono);font-size:.6rem;color:var(--muted);">既読</span>'}
+        </div>
       </div>
-      <div style="font-size:.82rem;color:var(--muted);line-height:1.7;white-space:pre-wrap;">${esc(q.message)}</div>
-      <div style="margin-top:.6rem;">
+      <div style="font-size:.82rem;color:var(--muted);line-height:1.7;white-space:pre-wrap;margin-bottom:.8rem;">${esc(q.message)}</div>
+      <div style="margin-bottom:.5rem;">
+        <label style="font-family:var(--mono);font-size:.63rem;color:var(--muted);letter-spacing:.1em;">MEMO</label>
+        <textarea style="width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);font-family:var(--sans);font-size:.8rem;padding:.5rem .7rem;margin-top:.3rem;border-radius:2px;resize:vertical;outline:none;box-sizing:border-box;"
+          rows="2" placeholder="対応状況・メモを入力..."
+          onchange="saveMemo(${q.id}, this.value)">${esc(q.memo || '')}</textarea>
+      </div>
+      <div style="margin-top:.3rem;">
         <button class="mp-btn mp-btn-danger" style="padding:.3rem .7rem;font-size:.62rem;"
           onclick="deleteInquiry(${q.id})">削除</button>
       </div>
@@ -428,6 +447,25 @@ async function deleteInquiry(id) {
   await saveData('inquiries', state.inquiries, true);
   renderInquiries();
   toast('削除しました');
+}
+
+async function markRead(id) {
+  state.inquiries = state.inquiries.map(q =>
+    q.id === id ? { ...q, read: true } : q
+  );
+  await saveData('inquiries', state.inquiries, true);
+  renderInquiries();
+  updateDashStats();
+  toast('既読にしました');
+}
+
+// ── メモ保存 ──
+async function saveMemo(id, value) {
+  state.inquiries = state.inquiries.map(q =>
+    q.id === id ? { ...q, memo: value } : q
+  );
+  await saveData('inquiries', state.inquiries, true);
+  toast('メモを保存しました');
 }
 
 // ── スキル ──

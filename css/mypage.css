@@ -149,7 +149,7 @@ nav.sidebar-nav { flex: 1; }
 /* ── STATS ── */
 .stats-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(5, 1fr);
   gap: 1px;
   background: var(--border);
   border: 1px solid var(--border);
@@ -387,4 +387,8 @@ textarea.mp-input { resize: vertical; }
   .links-input-grid { grid-template-columns: 1fr; }
   .mp-wrap { grid-template-columns: 1fr; }
   .stats-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 1024px) {
+  .stats-grid { grid-template-columns: repeat(3, 1fr); }
 }
