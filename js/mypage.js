@@ -138,7 +138,10 @@ function renderWorksTable() {
       <td>
         <span class="badge-status ${badgeClass(w.status)}">${esc(w.status)}</span>
       </td>
-      <td>
+      <td style="display:flex;flex-direction:column;gap:.4rem;">
+        <button class="mp-btn mp-btn-primary"
+          style="padding:.3rem .7rem;font-size:.62rem;"
+          onclick="editWork(${w.id})">編集</button>
         <button class="mp-btn mp-btn-danger"
           style="padding:.3rem .7rem;font-size:.62rem;"
           onclick="deleteWork(${w.id})">削除</button>
@@ -188,6 +191,60 @@ async function deleteWork(id) {
   updateDashStats();
   if (w) addActivity(`Works削除：${w.title}`);
   toast('削除しました');
+
+    // ── Works編集 ──
+  function editWork(id) {
+    const w = state.works.find(x => x.id === id);
+    if (!w) return;
+
+    document.getElementById('w-title').value  = w.title;
+    document.getElementById('w-desc').value   = w.desc;
+    document.getElementById('w-tags').value   = (w.tags || []).join(', ');
+    document.getElementById('w-status').value = w.status;
+    document.getElementById('w-url').value    = w.url || '';
+
+    // 追加ボタンを更新ボタンに切り替え
+    const btn = document.querySelector('#panel-works .mp-btn-primary');
+    btn.textContent = '更新する →';
+    btn.onclick = () => updateWork(id);
+
+    // フォームまでスクロール
+    document.getElementById('w-title').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    toast('編集モード：内容を変更して更新してください');
+  }
+
+  async function updateWork(id) {
+    const title  = document.getElementById('w-title').value.trim();
+    const desc   = document.getElementById('w-desc').value.trim();
+    const tags   = document.getElementById('w-tags').value
+                    .split(',').map(t => t.trim()).filter(Boolean);
+    const status = document.getElementById('w-status').value;
+    const url    = document.getElementById('w-url').value.trim();
+
+    if (!title || !desc) {
+      toast('タイトルと説明文を入力してください', true);
+      return;
+    }
+
+    state.works = state.works.map(w =>
+      w.id === id ? { ...w, title, desc, tags, status, url } : w
+    );
+    await saveData('works', state.works, true);
+
+    renderWorksTable();
+    updateDashStats();
+    addActivity(`Works更新：${title}`);
+
+    // フォームをリセットしてボタンを戻す
+    ['w-title', 'w-desc', 'w-tags', 'w-url'].forEach(id => {
+      document.getElementById(id).value = '';
+    });
+    const btn = document.querySelector('#panel-works .mp-btn-primary');
+    btn.textContent = '追加する →';
+    btn.onclick = addWork;
+
+    toast('更新しました');
+  }
 }
 
 // ── プロフィール ──
@@ -406,8 +463,12 @@ function renderSkillsList() {
           ${(s.tags||[]).map(t => `<span class="tag-sm">${esc(t)}</span>`).join('')}
         </div>
       </div>
-      <button class="mp-btn mp-btn-danger" style="padding:.3rem .7rem;font-size:.62rem;flex-shrink:0;"
-        onclick="deleteSkill(${s.id})">削除</button>
+      <div style="display:flex;flex-direction:column;gap:.4rem;flex-shrink:0;">
+        <button class="mp-btn mp-btn-primary" style="padding:.3rem .7rem;font-size:.62rem;"
+          onclick="editSkill(${s.id})">編集</button>
+        <button class="mp-btn mp-btn-danger" style="padding:.3rem .7rem;font-size:.62rem;"
+          onclick="deleteSkill(${s.id})">削除</button>
+      </div>
     </div>
   `).join('');
 }
@@ -444,6 +505,54 @@ async function deleteSkill(id) {
   renderSkillsList();
   if (s) addActivity(`スキル削除：${s.name}`);
   toast('削除しました');
+}
+
+// ── スキル編集 ──
+function editSkill(id) {
+  const s = state.skills.find(x => x.id === id);
+  if (!s) return;
+
+  document.getElementById('sk-icon').value = s.icon;
+  document.getElementById('sk-name').value = s.name;
+  document.getElementById('sk-desc').value = s.desc;
+  document.getElementById('sk-tags').value = (s.tags || []).join(', ');
+
+  const btn = document.querySelector('#panel-skills .mp-btn-primary');
+  btn.textContent = '更新する →';
+  btn.onclick = () => updateSkill(id);
+
+  document.getElementById('sk-icon').scrollIntoView({ behavior: 'smooth', block: 'center' });
+  toast('編集モード：内容を変更して更新してください');
+}
+
+async function updateSkill(id) {
+  const icon = document.getElementById('sk-icon').value.trim();
+  const name = document.getElementById('sk-name').value.trim();
+  const desc = document.getElementById('sk-desc').value.trim();
+  const tags = document.getElementById('sk-tags').value
+                 .split(',').map(t => t.trim()).filter(Boolean);
+
+  if (!icon || !name || !desc) {
+    toast('カテゴリ・スキル名・説明文を入力してください', true);
+    return;
+  }
+
+  state.skills = state.skills.map(s =>
+    s.id === id ? { ...s, icon, name, desc, tags } : s
+  );
+  await saveData('skills', state.skills);
+
+  renderSkillsList();
+  addActivity(`スキル更新：${name}`);
+
+  ['sk-icon', 'sk-name', 'sk-desc', 'sk-tags'].forEach(id => {
+    document.getElementById(id).value = '';
+  });
+  const btn = document.querySelector('#panel-skills .mp-btn-primary');
+  btn.textContent = '追加する →';
+  btn.onclick = addSkill;
+
+  toast('更新しました');
 }
 // ── 起動 ──
 document.addEventListener('DOMContentLoaded', init);
