@@ -191,60 +191,57 @@ async function deleteWork(id) {
   updateDashStats();
   if (w) addActivity(`Works削除：${w.title}`);
   toast('削除しました');
+}
 
-    // ── Works編集 ──
-  function editWork(id) {
-    const w = state.works.find(x => x.id === id);
-    if (!w) return;
+// ── Works編集 ──
+function editWork(id) {
+  const w = state.works.find(x => x.id === id);
+  if (!w) return;
 
-    document.getElementById('w-title').value  = w.title;
-    document.getElementById('w-desc').value   = w.desc;
-    document.getElementById('w-tags').value   = (w.tags || []).join(', ');
-    document.getElementById('w-status').value = w.status;
-    document.getElementById('w-url').value    = w.url || '';
+  document.getElementById('w-title').value  = w.title;
+  document.getElementById('w-desc').value   = w.desc;
+  document.getElementById('w-tags').value   = (w.tags || []).join(', ');
+  document.getElementById('w-status').value = w.status;
+  document.getElementById('w-url').value    = w.url || '';
 
-    // 追加ボタンを更新ボタンに切り替え
-    const btn = document.querySelector('#panel-works .mp-btn-primary');
-    btn.textContent = '更新する →';
-    btn.onclick = () => updateWork(id);
+  const btn = document.querySelector('#panel-works .mp-btn-primary');
+  btn.textContent = '更新する →';
+  btn.onclick = () => updateWork(id);
 
-    // フォームまでスクロール
-    document.getElementById('w-title').scrollIntoView({ behavior: 'smooth', block: 'center' });
-    toast('編集モード：内容を変更して更新してください');
+  document.getElementById('w-title').scrollIntoView({ behavior: 'smooth', block: 'center' });
+  toast('編集モード：内容を変更して更新してください');
+}
+
+async function updateWork(id) {
+  const title  = document.getElementById('w-title').value.trim();
+  const desc   = document.getElementById('w-desc').value.trim();
+  const tags   = document.getElementById('w-tags').value
+                   .split(',').map(t => t.trim()).filter(Boolean);
+  const status = document.getElementById('w-status').value;
+  const url    = document.getElementById('w-url').value.trim();
+
+  if (!title || !desc) {
+    toast('タイトルと説明文を入力してください', true);
+    return;
   }
 
-  async function updateWork(id) {
-    const title  = document.getElementById('w-title').value.trim();
-    const desc   = document.getElementById('w-desc').value.trim();
-    const tags   = document.getElementById('w-tags').value
-                    .split(',').map(t => t.trim()).filter(Boolean);
-    const status = document.getElementById('w-status').value;
-    const url    = document.getElementById('w-url').value.trim();
+  state.works = state.works.map(w =>
+    w.id === id ? { ...w, title, desc, tags, status, url } : w
+  );
+  await saveData('works', state.works, true);
 
-    if (!title || !desc) {
-      toast('タイトルと説明文を入力してください', true);
-      return;
-    }
+  renderWorksTable();
+  updateDashStats();
+  addActivity(`Works更新：${title}`);
 
-    state.works = state.works.map(w =>
-      w.id === id ? { ...w, title, desc, tags, status, url } : w
-    );
-    await saveData('works', state.works, true);
+  ['w-title', 'w-desc', 'w-tags', 'w-url'].forEach(id => {
+    document.getElementById(id).value = '';
+  });
+  const btn = document.querySelector('#panel-works .mp-btn-primary');
+  btn.textContent = '追加する →';
+  btn.onclick = addWork;
 
-    renderWorksTable();
-    updateDashStats();
-    addActivity(`Works更新：${title}`);
-
-    // フォームをリセットしてボタンを戻す
-    ['w-title', 'w-desc', 'w-tags', 'w-url'].forEach(id => {
-      document.getElementById(id).value = '';
-    });
-    const btn = document.querySelector('#panel-works .mp-btn-primary');
-    btn.textContent = '追加する →';
-    btn.onclick = addWork;
-
-    toast('更新しました');
-  }
+  toast('更新しました');
 }
 
 // ── プロフィール ──
